@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IP Investigation | Mini SIEM</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+        <div>
+            <h1>Mini SIEM</h1>
+            <p>IP Investigation</p>
+        </div>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            INVESTIGATION MODE
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <!-- IP INFORMATION -->
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <h2>IP Investigation</h2>
+
+                <a href="/" class="back-button">
+                    ← Back to Dashboard
+                </a>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Investigating IP Address</h3>
+
+                <p class="number">
+                    {{ ip }}
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- INVESTIGATION STATISTICS -->
+        <section class="stats-grid">
+
+            <div class="card">
+                <h3>Total Events</h3>
+                <p class="number">
+                    {{ total_events }}
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Failed Logins</h3>
+                <p class="number">
+                    {{ failed_logins }}
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Successful Logins</h3>
+                <p class="number">
+                    {{ successful_logins }}
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Threats Detected</h3>
+                <p class="number critical">
+                    {{ threats_detected }}
+                </p>
+            </div>
+
+        </section>
+
+<!-- DETECTED THREATS -->
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <h2>Detected Threats</h2>
+
+                <span>THREAT ANALYSIS</span>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Threat</th>
+<th>Severity</th>
+<th>Timestamp</th>
+<th>Source IP</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if detected_threats %}
+
+                            {% for threat in detected_threats %}
+
+                            <tr>
+
+                               <td>{{ threat["type"] }}</td>
+<td>
+    <span class="severity-badge {{ threat['severity']|lower }}">
+        {{ threat["severity"] }}
+    </span>
+</td>
+<td>{{ threat["timestamp"] }}</td>
+<td>{{ threat["ip"] }}</td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="4">
+                                    No specific threats detected.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- ACTIVITY -->
+        <section class="panel">
+
+            <div class="panel-header">
+
+                <h2>IP Activity</h2>
+
+                <span>LOG HISTORY</span>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Source IP</th>
+                            <th>Raw Log</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% if logs %}
+
+                            {% for log in logs %}
+
+                            <tr>
+
+                                <td>
+                                    {{ log["timestamp"] }}
+                                </td>
+
+                                <td>
+                                    {{ log["user"] }}
+                                </td>
+
+                                <td>
+    <span class="activity-status {{ log['status']|lower }}">
+        {{ log["status"] }}
+    </span>
+</td>
+
+                                <td>
+                                    {{ log["ip"] }}
+                                </td>
+
+                                <td>
+                                    {{ log["raw_log"] }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="5">
+                                    No activity found for this IP address.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        Mini SIEM • IP Investigation
+
+    </footer>
+
+</body>
+
+</html>

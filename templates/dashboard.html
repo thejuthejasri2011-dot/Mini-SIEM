@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mini SIEM | Security Operations Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+   <header class="topbar">
+
+    <div class="brand-section">
+
+        <div class="brand-title">
+            <span class="brand-icon">◈</span>
+            <h1>Mini SIEM</h1>
+        </div>
+
+        <p>Security Operations Dashboard</p>
+
+        <div class="header-meta">
+            <span class="meta-item">
+                <strong>{{ total_alerts }}</strong> alerts monitored
+            </span>
+
+            <span class="meta-divider">•</span>
+
+            <span class="meta-item">
+                Real-time threat detection
+            </span>
+        </div>
+
+    </div>
+
+    <div class="status online-status">
+        <span class="status-dot"></span>
+        <span>SYSTEM ONLINE</span>
+    </div>
+
+</header>
+
+
+    <main class="container">
+        <!-- STATISTICS -->
+<section class="stats-grid">
+
+    <div class="card">
+        <h3>Total Events</h3>
+        <p class="number">{{ total_events }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Alerts</h3>
+        <p class="number">{{ total_alerts }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Critical Threats</h3>
+        <p class="number critical">{{ critical_threats }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Suspicious IPs</h3>
+        <p class="number">{{ suspicious_ips }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Open Alerts</h3>
+        <p class="number">{{ open_alerts }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Investigating Alerts</h3>
+        <p class="number">{{ investigating_alerts }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Resolved Alerts</h3>
+        <p class="number">{{ resolved_alerts }}</p>
+    </div>
+
+</section>
+
+        <!-- SECURITY SUMMARY -->
+
+<section class="panel">
+
+    <div class="panel-header">
+
+        <h2>Security Summary</h2>
+
+        <span>SECURITY STATUS</span>
+
+    </div>
+
+    <div class="threat-grid">
+
+        <div class="threat-box">
+            <h3>Total Events</h3>
+            <p>{{ total_events }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Total Alerts</h3>
+            <p>{{ total_alerts }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Critical</h3>
+            <p>{{ critical_threats }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>High</h3>
+            <p>{{ high_threats }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Medium</h3>
+            <p>{{ medium_threats }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Open</h3>
+            <p>{{ open_alerts }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Investigating</h3>
+            <p>{{ investigating_alerts }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Resolved</h3>
+            <p>{{ resolved_alerts }}</p>
+        </div>
+
+    </div>
+
+</section>
+<!-- THREAT DISTRIBUTION -->
+
+<section class="panel">
+
+    <div class="panel-header">
+
+        <h2>Threat Distribution</h2>
+
+        <span>THREAT LEVELS</span>
+
+    </div>
+
+    <div class="threat-grid">
+
+        <div class="threat-box">
+            <h3>Critical</h3>
+            <p>{{ critical_threats }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>High</h3>
+            <p>{{ high_threats }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Medium</h3>
+            <p>{{ medium_threats }}</p>
+        </div>
+
+        <div class="threat-box">
+            <h3>Low</h3>
+            <p>{{ low_threats }}</p>
+        </div>
+
+    </div>
+
+</section>
+<!-- THREAT ACTIVITY -->
+
+<section class="panel">
+
+    <div class="panel-header">
+
+        <h2>Threat Activity</h2>
+
+        <span>ALERT TIMELINE</span>
+
+    </div>
+
+    <div class="activity-chart">
+
+        <canvas id="threatActivityChart"></canvas>
+
+    </div>
+
+</section>
+   
+
+
+        <!-- SECURITY ALERTS -->
+        <section class="panel">
+
+          <div class="panel-header">
+
+    <h2>Recent Security Alerts</h2>
+
+    <div>
+
+        <button onclick="location.reload()">
+            Refresh
+        </button>
+
+        <a href="/export-alerts">
+            <button type="button">
+                Export CSV
+            </button>
+        </a>
+
+    </div>
+
+</div>
+
+<!-- ALERT FILTERS -->
+
+<div class="alert-filters">
+
+    <input
+        type="text"
+        id="ipFilter"
+        placeholder="Search IP address..."
+    >
+
+    <select id="severityFilter">
+
+        <option value="ALL">All Severity</option>
+        <option value="CRITICAL">Critical</option>
+        <option value="HIGH">High</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="LOW">Low</option>
+
+    </select>
+
+    <select id="threatFilter">
+
+        <option value="ALL">All Threats</option>
+        <option value="Brute Force">Brute Force</option>
+        <option value="Suspicious Login Activity">
+            Suspicious Login Activity
+        </option>
+        <option value="Malware Detected">
+            Malware Detected
+        </option>
+        <option value="Port Scan">
+            Port Scan
+        </option>
+
+    </select>
+
+    <select id="statusFilter">
+
+    <option value="ALL">All Status</option>
+    <option value="OPEN">Open</option>
+    <option value="INVESTIGATING">Investigating</option>
+    <option value="RESOLVED">Resolved</option>
+
+</select>
+
+    <button onclick="filterAlerts()">
+        Apply Filter
+    </button>
+
+    <button onclick="clearFilters()">
+        Clear
+    </button>
+
+</div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>Severity</th>
+                            <th>Threat</th>
+                            <th>Source IP</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="alertsTable">
+
+                        {% if alerts %}
+
+                            {% for alert in alerts %}
+
+                            <tr>
+
+                                <td>
+                                    {{ alert["id"] }}
+                                </td>
+
+                                <td>
+                                    {{ alert["timestamp"] or "Unknown" }}
+                                </td>
+
+                                <td>
+    <span class="severity-badge {{ alert['severity']|lower }}">
+        {{ alert["severity"] }}
+    </span>
+</td>
+
+                                <td>
+                                    {{ alert["alert_type"] }}
+                                </td>
+
+                               <td>
+    <a href="/ip/{{ alert['ip'] }}" class="ip-link">
+        {{ alert["ip"] }}
+    </a>
+</td>
+
+                               <td>
+    <form method="POST" action="/alert/{{ alert['id'] }}/status">
+
+        <select
+    name="status"
+    class="status-select {{ alert['status']|lower }}"
+    onchange="this.form.submit()"
+>
+
+            <option value="OPEN"
+                {% if alert["status"] == "OPEN" %}selected{% endif %}>
+                OPEN
+            </option>
+
+            <option value="INVESTIGATING"
+                {% if alert["status"] == "INVESTIGATING" %}selected{% endif %}>
+                INVESTIGATING
+            </option>
+
+            <option value="RESOLVED"
+                {% if alert["status"] == "RESOLVED" %}selected{% endif %}>
+                RESOLVED
+            </option>
+
+        </select>
+
+    </form>
+</td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td colspan="6">
+                                    No security alerts detected.
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        Mini SIEM • Log Analyzer & Threat Detection Dashboard
+
+    </footer>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
+
+
+
