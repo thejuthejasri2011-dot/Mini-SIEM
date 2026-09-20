@@ -1258,3 +1258,52 @@ main.container {
     color: #4ade80;
     text-shadow: 0 0 12px rgba(74, 222, 128, 0.20);
 }
+
+/* ==========================================
+   SECURITY SUMMARY STATUS COLORS
+   ========================================== */
+
+.threat-box:nth-child(3) p {
+    color: #ff6b6b;
+}
+
+.threat-box:nth-child(4) p {
+    color: #ff9f43;
+}
+
+.threat-box:nth-child(5) p {
+    color: #ffd166;
+}
+
+.threat-box:nth-child(6) p {
+    color: #ff8080;
+}
+
+.threat-box:nth-child(7) p {
+    color: #ffae63;
+}
+
+.threat-box:nth-child(8) p {
+    color: #6ee7a0;
+}
+
+/* ==========================================
+   SECURITY ALERT TABLE POLISH
+   ========================================== */
+
+.alerts-table tbody tr {
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.alerts-table tbody tr:hover {
+    background: rgba(56, 189, 248, 0.04);
+}
+
+.alerts-table tbody td {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.alerts-table tbody tr + tr {
+    border-top: 1px solid rgba(148, 163, 184, 0.08);
+}
